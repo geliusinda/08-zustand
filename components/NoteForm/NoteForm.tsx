@@ -42,7 +42,11 @@ export default function NoteForm({ returnTo }: { returnTo: string }) {
   }
 
   return (
-    <form className={css.form} action={formAction}>
+    <form
+      className={css.form}
+      action={formAction}
+      onReset={(event) => event.preventDefault()}
+    >
       <div className={css.formGroup}>
         <label htmlFor="title">Title</label>
         <input
