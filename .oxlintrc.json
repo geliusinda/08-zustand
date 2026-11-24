@@ -7,7 +7,7 @@
       "warn",
       {
         "allowConstantExport": true,
-        "allowExportNames": ["metadata", "dynamic"]
+        "allowExportNames": ["metadata", "generateMetadata", "dynamic"]
       }
     ]
   },

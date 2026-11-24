@@ -1,14 +1,13 @@
 'use client';
 
-import { useCallback, useState, type ChangeEvent } from 'react';
+import Link from 'next/link';
+import { useState, type ChangeEvent } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDebouncedCallback } from 'use-debounce';
 import { fetchNotes, deleteNote } from '@/lib/api';
 import NoteList from '@/components/NoteList/NoteList';
 import SearchBox from '@/components/SearchBox/SearchBox';
 import Pagination from '@/components/Pagination/Pagination';
-import Modal from '@/components/Modal/Modal';
-import NoteForm from '@/components/NoteForm/NoteForm';
 import type { NoteTag } from '@/types/note';
 import css from './NotesPage.module.css';
 
@@ -16,9 +15,7 @@ export default function NotesClient({ tag }: { tag?: NoteTag }) {
   const [page, setPage] = useState(1);
   const [input, setInput] = useState('');
   const [search, setSearch] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
   const client = useQueryClient();
-  const closeModal = useCallback(() => setIsOpen(false), []);
   const updateSearch = useDebouncedCallback((value: string) => {
     setSearch(value.trim());
     setPage(1);
@@ -50,9 +47,15 @@ export default function NotesClient({ tag }: { tag?: NoteTag }) {
             onPageChange={setPage}
           />
         )}
-        <button className={css.button} onClick={() => setIsOpen(true)}>
+        <Link
+          className={css.button}
+          href={{
+            pathname: '/notes/action/create',
+            query: tag ? { from: tag } : undefined,
+          }}
+        >
           Create note +
-        </button>
+        </Link>
       </header>
       {query.isPending && <p role="status">Loading, please wait...</p>}
       {deletion.isError && (
@@ -73,20 +76,6 @@ export default function NotesClient({ tag }: { tag?: NoteTag }) {
           onDelete={(id: string) => deletion.mutate(id)}
           deletingId={deletion.isPending ? deletion.variables : undefined}
         />
-      )}
-      {isOpen && (
-        <Modal onClose={closeModal}>
-          <NoteForm
-            onCancel={closeModal}
-            onSuccess={() => {
-              updateSearch.cancel();
-              setInput('');
-              setSearch('');
-              setPage(1);
-              closeModal();
-            }}
-          />
-        </Modal>
       )}
     </main>
   );

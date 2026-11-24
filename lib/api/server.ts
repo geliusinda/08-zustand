@@ -1,4 +1,6 @@
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
+import { notFound } from 'next/navigation';
+import { cache } from 'react';
 import { createNotesApi } from '../api';
 
 export const noteHub = axios.create({
@@ -8,3 +10,13 @@ export const noteHub = axios.create({
 });
 
 export const { fetchNotes, fetchNoteById } = createNotesApi(noteHub);
+
+export const getNote = cache(async (id: string) => {
+  if (!/^[\w-]+$/.test(id)) notFound();
+  try {
+    return await fetchNoteById(id);
+  } catch (error) {
+    if (isAxiosError(error) && error.response?.status === 404) notFound();
+    throw new Error('Could not fetch note details.');
+  }
+});

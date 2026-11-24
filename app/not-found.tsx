@@ -1,4 +1,14 @@
+import { pageMetadata } from '@/lib/metadata';
 import css from './NotFound.module.css';
+
+export const metadata = {
+  ...pageMetadata(
+    'Page not found | NoteHub',
+    'The requested page does not exist.',
+    '/404',
+  ),
+  robots: { index: false, follow: false },
+};
 
 export default function NotFound() {
   return (
