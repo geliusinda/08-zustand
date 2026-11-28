@@ -1,15 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createNote } from '@/lib/api';
 import { useNoteStore } from '@/lib/store/noteStore';
 import { noteTags } from '@/types/note';
 import css from './NoteForm.module.css';
 
-export default function NoteForm({ returnTo }: { returnTo: string }) {
+export default function NoteForm() {
   const router = useRouter();
+  const from = useSearchParams().getAll('from');
+  const sourceTag = noteTags.find(
+    (tag) => from.length === 1 && tag === from[0],
+  );
+  const returnTo = `/notes/filter/${sourceTag ?? 'all'}`;
   const client = useQueryClient();
   const draft = useNoteStore((state) => state.draft);
   const setDraft = useNoteStore((state) => state.setDraft);

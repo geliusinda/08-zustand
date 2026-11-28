@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import NoteForm from '@/components/NoteForm/NoteForm';
-import { noteTags } from '@/types/note';
+import { Suspense } from 'react';
 import css from './CreateNote.module.css';
 
 const title = 'Create note | NoteHub';
@@ -25,19 +25,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function CreateNote({
-  searchParams,
-}: {
-  searchParams: Promise<{ from?: string | string[] }>;
-}) {
-  const { from } = await searchParams;
-  const tag = noteTags.find((tag) => tag === from);
-
+export default function CreateNote() {
   return (
     <main className={css.main}>
       <div className={css.container}>
         <h1 className={css.title}>Create note</h1>
-        <NoteForm returnTo={`/notes/filter/${tag ?? 'all'}`} />
+        <Suspense fallback={<p role="status">Loading form…</p>}>
+          <NoteForm />
+        </Suspense>
       </div>
     </main>
   );
