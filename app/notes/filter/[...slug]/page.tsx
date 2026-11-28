@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import {
   dehydrate,
   HydrationBoundary,
@@ -18,7 +19,9 @@ async function getFilter(params: NotesPageProps['params']) {
   return { filter, tag };
 }
 
-export async function generateMetadata({ params }: NotesPageProps) {
+export async function generateMetadata({
+  params,
+}: NotesPageProps): Promise<Metadata> {
   const { filter, tag } = await getFilter(params);
   return pageMetadata(
     tag ? `${tag} notes | NoteHub` : 'All notes | NoteHub',

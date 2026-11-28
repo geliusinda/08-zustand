@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
-import { metadataBase, pageMetadata } from '@/lib/metadata';
 import type { ReactNode } from 'react';
 import 'modern-normalize/modern-normalize.css';
 import './globals.css';
@@ -14,10 +13,35 @@ const roboto = Roboto({
   subsets: ['latin'],
 });
 
+const productionHost = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+const metadataBase = new URL(
+  process.env.SITE_URL ??
+    (productionHost ? `https://${productionHost}` : 'http://localhost:3000'),
+);
+
+const title = 'NoteHub';
+const description = 'Keep your thoughts organized with NoteHub.';
+
 export const metadata: Metadata = {
   metadataBase,
-  ...pageMetadata('NoteHub', 'Keep your thoughts organized with NoteHub.', '/'),
+  title,
+  description,
+  alternates: { canonical: '/' },
+  openGraph: {
+    title,
+    description,
+    url: '/',
+    siteName: 'NoteHub',
+    type: 'website',
+    images: [
+      {
+        url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+        alt: 'NoteHub',
+      },
+    ],
+  },
 };
+
 export default function RootLayout({
   children,
   modal,

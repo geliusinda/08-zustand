@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { pageMetadata } from '@/lib/metadata';
 import { getNote } from '@/lib/api/server';
 import NoteData from '../NoteData';
@@ -6,7 +7,9 @@ import css from './NoteDetails.module.css';
 
 type NoteDetailsProps = { params: Promise<{ id: string }> };
 
-export async function generateMetadata({ params }: NoteDetailsProps) {
+export async function generateMetadata({
+  params,
+}: NoteDetailsProps): Promise<Metadata> {
   const { id } = await params;
   const note = await getNote(id);
   const content = note.content.trim().replace(/\s+/g, ' ');

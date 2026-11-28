@@ -1,7 +1,8 @@
+import type { Metadata } from 'next';
 import { pageMetadata } from '@/lib/metadata';
 import css from './NotFound.module.css';
 
-export const metadata = {
+export const metadata: Metadata = {
   ...pageMetadata(
     'Page not found | NoteHub',
     'The requested page does not exist.',
